@@ -84,6 +84,7 @@ function SignIn() {
   const location = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const { login_challenge: challenge } = queryString.parse(location.search);
 
@@ -103,11 +104,19 @@ function SignIn() {
         return { ok: false };
       }
       setIsSubmitting(false);
-      if (redirectUrl) window.location.href = redirectUrl;
+      if (redirectUrl) {
+        console.log('is redirecting', redirectUrl);
+        setIsRedirecting(true);
+        window.location.href = redirectUrl;
+      }
       return { ok: true };
     },
     validator
   });
+
+  if (isRedirecting) {
+    return null;
+  }
 
   return (
     <div>
